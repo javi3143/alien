@@ -4,19 +4,14 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Alien Simulator</title>
 </head>
 <body>
 
 <form action="addAlien">
 <input type="text" name="name"><br>
 <input type="text" name="type"><br>
-<input type="text" name="birth_planet"><br>
-<input type="submit"><br>
-</form>
-
-<form action="getAlien">
-<input type="text" name="name"><br>
+<input type="text" name="birthPlanet"><br>
 <input type="submit"><br>
 </form>
 

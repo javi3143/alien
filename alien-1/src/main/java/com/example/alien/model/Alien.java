@@ -1,19 +1,27 @@
 package com.example.alien.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Alien {
-@Id
+@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int aid;
 	private String name;
 	private String type;
-	private String birth_planet;
-	
+	private String birthPlanet;
+	public int getAid() {
+		return aid;
+	}
+	public void setAid(int aid) {
+		this.aid = aid;
+	}
 	public String getName() {
 		return name;
 	}
-	public void setAid(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	public String getType() {
@@ -22,14 +30,11 @@ public class Alien {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getBirth() {
-		return birth_planet;
+	public String getBirthPlanet() {
+		return birthPlanet;
 	}
-	public void setBirth(String birth_planet) {
-		this.birth_planet = birth_planet;
+	public void setBirthPlanet(String birthPlanet) {
+		this.birthPlanet = birthPlanet;
 	}
-	@Override
-	public String toString() {
-		return "Alien [name=" + name + ", type=" + type + ", birth_planet=" + birth_planet + "]";
-	}
+
 }
