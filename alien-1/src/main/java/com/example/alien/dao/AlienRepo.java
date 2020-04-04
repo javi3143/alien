@@ -2,10 +2,11 @@ package com.example.alien.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.alien.model.Alien;
 
-public interface AlienRepo extends CrudRepository<Alien, String>
+public interface AlienRepo extends JpaRepository<Alien, String>
 {
 }
