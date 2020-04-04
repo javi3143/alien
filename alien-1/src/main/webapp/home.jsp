@@ -9,10 +9,15 @@
 <body>
 
 <form action="addAlien">
-<input type="text" name="name"><br>
-<input type="text" name="type"><br>
-<input type="text" name="birthPlanet"><br>
-<input type="submit"><br>
+	<input type="text" name="name"><br>
+	<input type="text" name="type"><br>
+	<input type="text" name="birthPlanet"><br>
+	<input type="submit"><br>
+</form>
+
+<form action="getAlien">
+	<input type="text" name="name"><br>
+	<input type="submit"><br>
 </form>
 
 </body>

@@ -7,17 +7,15 @@ import javax.persistence.Id;
 
 @Entity
 public class Alien {
-@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int aid;
-	private String name;
+@Id private String name;
 	private String type;
 	private String birthPlanet;
-	public int getAid() {
-		return aid;
-	}
-	public void setAid(int aid) {
-		this.aid = aid;
-	}
+//	public int getAid() {
+	//	return aid;
+	//}
+	//public void setAid(int aid) {
+	//	this.aid = aid;
+	//}
 	public String getName() {
 		return name;
 	}
@@ -36,5 +34,9 @@ public class Alien {
 	public void setBirthPlanet(String birthPlanet) {
 		this.birthPlanet = birthPlanet;
 	}
+	@Override
+	 public String toString() {
+	  return "Alien [name=" + name + ", type=" + type + ", birthPlanet=" + birthPlanet + "]";
+	 }
 
 }
