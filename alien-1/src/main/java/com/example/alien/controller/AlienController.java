@@ -24,6 +24,11 @@ public class AlienController
 		repo.save(alien);
 		return "home.jsp";
 	}
+	@RequestMapping("/deleteAlien")
+	public String deleteAlien(String name) {
+		repo.deleteById(name);
+		return "home.jsp";
+	}
 	@RequestMapping("/getAlien")
 	public ModelAndView getAlien(@RequestParam String name) {
 		ModelAndView mv= new ModelAndView("showAlien.jsp");
