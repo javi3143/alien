@@ -1,15 +1,27 @@
 package com.example.alien.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Alien {
-@Id private String name;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	private Integer id;
+	private String name;
 	private String type;
 	private String planet;
-	private String parent;
+	private String children;
 	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
@@ -28,11 +40,11 @@ public class Alien {
 	public void setPlanet(String planet) {
 		this.planet = planet;
 	}
-	public String getParent() {
-		return parent;
+	public String getChildren() {
+		return children;
 	}
-	public void setParent(String parent) {
-		this.parent = parent;
+	public void setChildren(String children) {
+		this.children = children;
 	}
 
 }

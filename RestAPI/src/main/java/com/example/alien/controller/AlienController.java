@@ -24,16 +24,16 @@ public class AlienController
 	@Autowired
 	AlienRepo repo;
 
-	@PutMapping("/alien")
+	@PutMapping("/alien/{id}")
 	public Alien updateAlien(@RequestBody Alien alien) {
 		repo.save(alien);
 		return alien;
 	}
 	
-	@DeleteMapping("/alien/{name}")
-	public String deleteAlien(@PathVariable String name)
+	@DeleteMapping("/alien/{id}")
+	public String deleteAlien(@PathVariable Integer id)
 	{
-		Alien a = repo.getOne(name);
+		Alien a = repo.getOne(id);
 		repo.delete(a);
 		return "deleted";
 	}
@@ -49,9 +49,9 @@ public class AlienController
 		return repo.findAll();
 	}
 	
-	@RequestMapping("/alien/{name}")
-	public Optional<Alien> oneAlien(@PathVariable("name") String name) {
-		return repo.findById(name);
+	@RequestMapping("/alien/{id}")
+	public Optional<Alien> oneAlien(@PathVariable("id") Integer id) {
+		return repo.findById(id);
 	}
 	
 	@GetMapping("/")

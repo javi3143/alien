@@ -9,18 +9,20 @@ class App extends Component {
       name:'',
       type:'',
       planet:'',
-      parent:''
+      children:''
 
     },
     editAlienData: {
+      id: '',
       name:'',
       type:'',
       planet:'',
-      parent:''
+      children:''
     },
     newAlienModal: false,
     editAlienModal: false
   }
+
   componentWillMount() {
     this._refreshAliens()
   }
@@ -32,25 +34,25 @@ class App extends Component {
       aliens.push(response.data);
 
       this.setState({aliens, newAlienModal: false, newAlienData: {
-        title:'',
+        name:'',
         type: '',
         planet: '',
-        parent: ''
+        children: ''
       }});
     });
   }
-  updateAlien() {
-    axios.put('http://localhost:8080/alien', this.state.editAlienData).then((response) => {
+  updateAlien(id) {
+    axios.put('http://localhost:8080/alien/' + id, this.state.editAlienData).then((response) => {
       this._refreshAliens();
 
       this.setState({
-        editAlienModal: false, editAlienData: {name: '', type: '', planet: '', parent: ''}
+        editAlienModal: false, editAlienData: {id: '', name: '', type: '', planet: '', children: ''}
       });
     });
   }
-  editAlien(name, type, planet, parent) {
+  editAlien(id, name, type, planet, children) {
     this.setState( {
-      editAlienData: { name, type, planet, parent}, editAlienModal: ! this.state.editAlienModal
+      editAlienData: { id, name, type, planet, children}, editAlienModal: ! this.state.editAlienModal
     });
   }
   _refreshAliens () {
@@ -60,8 +62,8 @@ class App extends Component {
       })
     });
   }
-  deleteAlien (name) {
-      axios.delete('http://localhost:8080/alien/' + name).then((response) => {
+  deleteAlien (id) {
+      axios.delete('http://localhost:8080/alien/' + id).then((response) => {
         this._refreshAliens();
       });
   }
@@ -80,14 +82,14 @@ class App extends Component {
   render() {
     let aliens = this.state.aliens.map((alien) => {
     return (
-      <tr key={alien.name}>
+      <tr key={alien.id}>
         <td>{alien.name}</td>
         <td>{alien.type}</td>
         <td>{alien.planet}</td>
-        <td>{alien.parent}</td>
+        <td>{alien.children}</td>
         <td>
-          <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.name, alien.type, alien.planet, alien.parent)}>Edit</Button>
-          <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.name)}>Delete</Button>
+          <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, alien.type, alien.planet, alien.children)}>Edit</Button>
+          <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
         </td>
       </tr>
       )
@@ -127,10 +129,10 @@ class App extends Component {
             }}/>
           </FormGroup>
           <FormGroup>
-            <Label for="parent">Parent</Label>
-            <Input id="parent" value={this.state.newAlienData.parent} onChange={(e) => {
+            <Label for="children">Children</Label>
+            <Input id="children" value={this.state.newAlienData.children} onChange={(e) => {
               let {newAlienData} = this.state
-              newAlienData.parent = e.target.value;
+              newAlienData.children = e.target.value;
               this.setState({newAlienData});
             }}/>
           </FormGroup>
@@ -169,16 +171,16 @@ class App extends Component {
             }}/>
           </FormGroup>
           <FormGroup>
-            <Label for="parent">Parent</Label>
-            <Input id="parent" value={this.state.editAlienData.parent} onChange={(e) => {
+            <Label for="children">Children</Label>
+            <Input id="children" value={this.state.editAlienData.children} onChange={(e) => {
               let {editAlienData} = this.state
-              editAlienData.parent = e.target.value;
+              editAlienData.children = e.target.value;
               this.setState({editAlienData});
             }}/>
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.updateAlien.bind(this)}>Edit Alien</Button>{' '}
+          <Button color="primary" onClick={this.updateAlien.bind(this, this.state.editAlienData.id)}>Edit Alien</Button>{' '}
           <Button color="secondary" onClick={this.toggleEditAlienModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
@@ -189,7 +191,7 @@ class App extends Component {
               <th>Name</th>
               <th>Type</th>
               <th>Planet</th>
-              <th>Parent</th>
+              <th>Children</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -201,5 +203,6 @@ class App extends Component {
       </div>
     );
   }
+  
 }
 export default App;
