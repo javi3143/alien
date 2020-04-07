@@ -11,13 +11,15 @@ import lombok.Data;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class AlienDto {
-
     private Long id;
     private String name;
     private Alien parent;
