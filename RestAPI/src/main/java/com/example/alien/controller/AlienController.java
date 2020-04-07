@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.example.alien.dao.AlienRepo;
 import com.example.alien.model.Alien;
 import com.example.alien.model.AlienDto;
+import com.example.alien.model.NewAlien;
 
 @RestController
 @RequestMapping("/api/v1/alien")
@@ -22,11 +23,11 @@ public class AlienController
 	AlienRepo repo;
 	
 	@PostMapping("/post")
-	public Alien addAlien(@RequestBody Alien alien) {
+	public Alien addAlien(@RequestBody NewAlien alien) {
 		Alien a = new Alien();
 		a.setName(alien.getName());
 		a.setId(alien.getId());
-		a.setParent(alien.getParent());
+		a.setParent(alien.getParent(repo.getOne(alien.getClave())));
 		repo.save(a);
 		return a;
 	}

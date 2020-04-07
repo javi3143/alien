@@ -21,7 +21,8 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Alien {
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     @Setter
     @EqualsAndHashCode.Include
