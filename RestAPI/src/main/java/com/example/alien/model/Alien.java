@@ -1,50 +1,46 @@
 package com.example.alien.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
+@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Alien {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private Integer id;
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
+    @EqualsAndHashCode.Include
+	private Long id;
+    @Getter
+    @Setter
 	private String name;
-	private String type;
-	private String planet;
-	private String children;
+	@ManyToOne(fetch=FetchType.LAZY)
+    @Getter
+    @Setter
+	private Alien parent;
+	@OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Setter
+	private Set<Alien> children;
 	
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getPlanet() {
-		return planet;
-	}
-	public void setPlanet(String planet) {
-		this.planet = planet;
-	}
-	public String getChildren() {
+	@JsonIgnore
+	public Set<Alien> getChildren() {
 		return children;
 	}
-	public void setChildren(String children) {
-		this.children = children;
-	}
-
+	
 }
