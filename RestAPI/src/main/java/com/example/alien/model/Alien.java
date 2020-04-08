@@ -38,10 +38,15 @@ public class Alien {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter
 	private Set<Alien> children;
-	
+	// Con esto haces que no aparezcan en los nested jsons de los hijos
 	@JsonIgnore
 	public Set<Alien> getChildren() {
 		return children;
+	}
+	
+	@JsonIgnore
+	public Alien getParent() {
+		return parent;
 	}
 	
 }

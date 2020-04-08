@@ -9,12 +9,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.example.alien.dao.AlienRepo;
 import com.example.alien.model.Alien;
 import com.example.alien.model.AlienDto;
 import com.example.alien.model.NewAlien;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/alien")
 public class AlienController 
@@ -27,11 +29,20 @@ public class AlienController
 		Alien a = new Alien();
 		a.setName(alien.getName());
 		a.setId(alien.getId());
-		a.setParent(alien.getParent(repo.getOne(alien.getClave())));
+		if(alien.getClave() == null) {
+			a.setParent(null);
+		} else {
+			a.setParent(alien.getParent(repo.getOne(alien.getClave())));
+		}
 		repo.save(a);
 		return a;
 	}
-	
+//	if(dto.getParentId() == 0) {
+//        alien.setParent(null);
+//    }else {
+//        Alien parent = this.repo.findById(dto.getParentId());
+//        alien.setParent(parent);
+//    }
 	@PutMapping("{id}")
 	public Alien updateAlien(@RequestBody Alien alien) {
 		Alien a = repo.getOne(alien.getId());
@@ -65,13 +76,15 @@ public class AlienController
 		return "deleted";
 	}
 	
-	private Function<Alien, Set<AlienDto>> getAll = alien -> alien.getParent().getChildren().stream()
-			.map(p -> AlienDto.builder().id(p.getId()).name(p.getName()).build()).collect(Collectors.toSet());
+	@GetMapping("/all")
+	public Stream<AlienDto> getAll() {
+		return repo.findAll().stream().map(mapToAlienDto);
+	}
 	
     private Function<Alien, Set<AlienDto>> findSiblings = alien -> alien.getParent().getChildren().stream()
             .map(p -> AlienDto.builder().id(p.getId()).name(p.getName()).build()).collect(Collectors.toSet());
 
-    private Function<Alien, AlienDto> mapToAlienDto = p -> AlienDto.builder().id(p.getId()).name(p.getName()).parent(p.getParent()).children(p.getChildren()).build();
+    private Function<Alien, AlienDto> mapToAlienDto = p -> AlienDto.builder().id(p.getId()).name(p.getName()).children(p.getChildren()).build();
 //	@PutMapping("/alien/{id}")
 //	public Alien updateAlien(@RequestBody Alien alien) {
 //		repo.save(alien);

@@ -7,17 +7,12 @@ class App extends Component {
     aliens: [],
     newAlienData: {
       name:'',
-      type:'',
-      planet:'',
-      children:''
-
+      clave: ''
     },
     editAlienData: {
       id: '',
       name:'',
-      type:'',
-      planet:'',
-      children:''
+      parent_id:''
     },
     newAlienModal: false,
     editAlienModal: false
@@ -28,42 +23,40 @@ class App extends Component {
   }
 
   addAlien(){
-    axios.post('http://localhost:8080/alien', this.state.newAlienData).then((response) => {
+    axios.post('http://localhost:8080/api/v1/alien/post', this.state.newAlienData).then((response) => {
       let {aliens} = this.state;
 
       aliens.push(response.data);
 
       this.setState({aliens, newAlienModal: false, newAlienData: {
         name:'',
-        type: '',
-        planet: '',
-        children: ''
+        clave: ''
       }});
     });
   }
   updateAlien(id) {
-    axios.put('http://localhost:8080/alien/' + id, this.state.editAlienData).then((response) => {
+    axios.put('http://localhost:8080/api/v1/alien/' + id, this.state.editAlienData).then((response) => {
       this._refreshAliens();
 
       this.setState({
-        editAlienModal: false, editAlienData: {id: '', name: '', type: '', planet: '', children: ''}
+        editAlienModal: false, editAlienData: {id: '', name: '', parent_id: ''}
       });
     });
   }
-  editAlien(id, name, type, planet, children) {
+  editAlien(id, name, parent_id) {
     this.setState( {
-      editAlienData: { id, name, type, planet, children}, editAlienModal: ! this.state.editAlienModal
+      editAlienData: { id, name, parent_id}, editAlienModal: ! this.state.editAlienModal
     });
   }
   _refreshAliens () {
-    axios.get('http://localhost:8080/aliens').then((response) => {
+    axios.get('http://localhost:8080/api/v1/alien/aliens').then((response) => {
       this.setState({
         aliens: response.data
       })
     });
   }
   deleteAlien (id) {
-      axios.delete('http://localhost:8080/alien/' + id).then((response) => {
+      axios.delete('http://localhost:8080/api/v1/alien/' + id).then((response) => {
         this._refreshAliens();
       });
   }
@@ -81,19 +74,34 @@ class App extends Component {
   }
   render() {
     let aliens = this.state.aliens.map((alien) => {
-    return (
-      <tr key={alien.id}>
-        <td>{alien.name}</td>
-        <td>{alien.type}</td>
-        <td>{alien.planet}</td>
-        <td>{alien.children}</td>
-        <td>
-          <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, alien.type, alien.planet, alien.children)}>Edit</Button>
-          <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
-        </td>
-      </tr>
-      )
-    });
+      if (Object.keys(alien).length === 3) {
+        console.log(alien, Object.keys(alien).length)
+        alien.parent.map(parent =>{
+          return (
+            <tr key={alien.id}>
+              <td>{alien.name}</td>
+              <td>{parent.name}</td>
+              <td>
+                <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, parent.name)}>Edit</Button>
+                <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
+              </td>
+            </tr>
+            )
+          })
+        } else{
+          let par = "No Parent"
+          return (
+            <tr key={alien.id}>
+              <td>{alien.name}</td>
+              <td>{par}</td>
+              <td>
+                <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, par)}>Edit</Button>
+                <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
+              </td>
+            </tr>
+            )}
+        });
+
     return (
       <div className="App container">
 
@@ -189,9 +197,7 @@ class App extends Component {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Type</th>
-              <th>Planet</th>
-              <th>Children</th>
+              <th>Parent</th>
               <th>Actions</th>
             </tr>
           </thead>
