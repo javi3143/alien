@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Table, Button, ModalHeader, Modal, ModalFooter, ModalBody, Label, Input, FormGroup} from 'reactstrap';
+import Tree from "./Tree"
 
 class App extends Component {
   state = {
@@ -11,8 +12,7 @@ class App extends Component {
     },
     editAlienData: {
       id: '',
-      name:'',
-      parent_id:''
+      name:''
     },
     newAlienModal: false,
     editAlienModal: false
@@ -39,17 +39,17 @@ class App extends Component {
       this._refreshAliens();
 
       this.setState({
-        editAlienModal: false, editAlienData: {id: '', name: '', parent_id: ''}
+        editAlienModal: false, editAlienData: {id: '', name: ''}
       });
     });
   }
-  editAlien(id, name, parent_id) {
+  editAlien(id, name) {
     this.setState( {
-      editAlienData: { id, name, parent_id}, editAlienModal: ! this.state.editAlienModal
+      editAlienData: { id, name}, editAlienModal: ! this.state.editAlienModal
     });
   }
   _refreshAliens () {
-    axios.get('http://localhost:8080/api/v1/alien/aliens').then((response) => {
+    axios.get('http://localhost:8080/api/v1/alien/all').then((response) => {
       this.setState({
         aliens: response.data
       })
@@ -73,40 +73,47 @@ class App extends Component {
     // this.state.newAlienModal  = true;
   }
   render() {
+    function convert(array){
+      var map = {};
+      for(var i = 0; i < array.length; i++){
+          var obj = array[i];
+         
+  
+          map[obj.id] = obj;
+  
+          var parent = obj.parent || '-';
+          if(!map[parent]){
+              map[parent] = {
+                  items: []
+              };
+          }
+          map[parent].items.push(obj);
+      }
+  
+      return map['-'].items;
+  
+  }
+  
+  console.log(convert(this.state.aliens))
+    let data = JSON.stringify(this.state.aliens);
     let aliens = this.state.aliens.map((alien) => {
-      if (Object.keys(alien).length === 3) {
-        console.log(alien, Object.keys(alien).length)
-        alien.parent.map(parent =>{
-          return (
-            <tr key={alien.id}>
-              <td>{alien.name}</td>
-              <td>{parent.name}</td>
-              <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, parent.name)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
-              </td>
-            </tr>
-            )
-          })
-        } else{
-          let par = "No Parent"
-          return (
-            <tr key={alien.id}>
-              <td>{alien.name}</td>
-              <td>{par}</td>
-              <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, par)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
-              </td>
-            </tr>
-            )}
-        });
+      return (
+        <tr key={alien.id}>
+          <td>{alien.id}</td>
+          <td>{alien.name}</td>
+          <td>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name)}>Edit Name</Button>
+            <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
+          </td>
+        </tr>
+      )
+      })
 
     return (
+        
       <div className="App container">
 
-      <h1> Alien race App</h1>
-
+      <div><img src="alien.png" alt="logo"/><h1>Alien Family Tree</h1></div>
       <Button className="my-3" color="primary" onClick={this.toggleNewAlienModal.bind(this)}>Add a new alien</Button>
 
       <Modal isOpen={this.state.newAlienModal} toggle={this.toggleNewAlienModal.bind(this)}>
@@ -121,6 +128,14 @@ class App extends Component {
             }}/>
           </FormGroup>
           <FormGroup>
+            <Label for="name">Parent ID</Label>
+            <Input id="name" value={this.state.newAlienData.clave} onChange={(e) => {
+              let {newAlienData} = this.state
+              newAlienData.clave = e.target.value;
+              this.setState({newAlienData});
+            }}/>
+          </FormGroup>
+          {/* <FormGroup>
             <Label for="type">Type</Label>
             <Input id="type" value={this.state.newAlienData.type} onChange={(e) => {
               let {newAlienData} = this.state
@@ -135,15 +150,7 @@ class App extends Component {
               newAlienData.planet = e.target.value;
               this.setState({newAlienData});
             }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="children">Children</Label>
-            <Input id="children" value={this.state.newAlienData.children} onChange={(e) => {
-              let {newAlienData} = this.state
-              newAlienData.children = e.target.value;
-              this.setState({newAlienData});
-            }}/>
-          </FormGroup>
+          </FormGroup> */}
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.addAlien.bind(this)}>Add Alien</Button>{' '}
@@ -162,7 +169,7 @@ class App extends Component {
               this.setState({editAlienData});
             }}/>
           </FormGroup>
-          <FormGroup>
+          {/* <FormGroup>
             <Label for="type">Type</Label>
             <Input id="type" value={this.state.editAlienData.type} onChange={(e) => {
               let {editAlienData} = this.state
@@ -177,15 +184,8 @@ class App extends Component {
               editAlienData.planet = e.target.value;
               this.setState({editAlienData});
             }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="children">Children</Label>
-            <Input id="children" value={this.state.editAlienData.children} onChange={(e) => {
-              let {editAlienData} = this.state
-              editAlienData.children = e.target.value;
-              this.setState({editAlienData});
-            }}/>
-          </FormGroup>
+          </FormGroup> */}
+
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.updateAlien.bind(this, this.state.editAlienData.id)}>Edit Alien</Button>{' '}
@@ -196,8 +196,8 @@ class App extends Component {
         <Table>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
-              <th>Parent</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -206,6 +206,7 @@ class App extends Component {
             {aliens}
           </tbody>
         </Table>
+        <Tree data={data}/>
       </div>
     );
   }

@@ -44,9 +44,9 @@ public class Alien {
 		return children;
 	}
 	
-	@JsonIgnore
-	public Alien getParent() {
-		return parent;
-	}
+//	@JsonIgnore
+//	public Alien getParent() {
+//		return parent;
+//	}
 	
 }

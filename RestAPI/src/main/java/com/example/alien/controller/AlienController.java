@@ -51,11 +51,13 @@ public class AlienController
 		return a;
 	}
 	
-	@GetMapping("/{id}")
-    public ResponseEntity<AlienDto> getAllDetails(@PathVariable("id") Long id) {
-        return repo.findById(id).map(mapToAlienDto).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+	@DeleteMapping("{id}")
+	public String deleteAlien(@PathVariable("id") Long id)
+	{
+		Alien a = repo.getOne(id);
+		repo.delete(a);
+		return "deleted";
+	}
 
     @GetMapping("/{id}/siblings")
     public ResponseEntity<Set<AlienDto>> getAllSiblings(@PathVariable("id") Long id) {
@@ -68,13 +70,13 @@ public class AlienController
 		return repo.findAll();
 	}
 	
-	@DeleteMapping("{id}")
-	public String deleteAlien(@PathVariable("id") Long id)
-	{
-		Alien a = repo.getOne(id);
-		repo.delete(a);
-		return "deleted";
-	}
+	@GetMapping("/{id}")
+    public ResponseEntity<AlienDto> getAllDetails(@PathVariable("id") Long id) {
+        return repo.findById(id).map(mapToAlienDto).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+	
+
 	
 	@GetMapping("/all")
 	public Stream<AlienDto> getAll() {
@@ -84,7 +86,7 @@ public class AlienController
     private Function<Alien, Set<AlienDto>> findSiblings = alien -> alien.getParent().getChildren().stream()
             .map(p -> AlienDto.builder().id(p.getId()).name(p.getName()).build()).collect(Collectors.toSet());
 
-    private Function<Alien, AlienDto> mapToAlienDto = p -> AlienDto.builder().id(p.getId()).name(p.getName()).children(p.getChildren()).build();
+    private Function<Alien, AlienDto> mapToAlienDto = p -> AlienDto.builder().id(p.getId()).name(p.getName()).parent(p.getParent()).children(p.getChildren()).build();
 //	@PutMapping("/alien/{id}")
 //	public Alien updateAlien(@RequestBody Alien alien) {
 //		repo.save(alien);
