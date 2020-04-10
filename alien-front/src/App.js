@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Table, Button, ModalHeader, Modal, ModalFooter, ModalBody, Label, Input, FormGroup} from 'reactstrap';
-import Tree from "./Tree"
 
 class App extends Component {
   state = {
     aliens: [],
     newAlienData: {
       name:'',
-      clave: ''
+      clave: '',
+      parent: '',
+      type: ''
     },
     editAlienData: {
       id: '',
-      name:''
+      name:'',
+      planet: ''
     },
     newAlienModal: false,
     editAlienModal: false
@@ -30,7 +32,9 @@ class App extends Component {
 
       this.setState({aliens, newAlienModal: false, newAlienData: {
         name:'',
-        clave: ''
+        clave: '',
+        type: '',
+        planet: ''
       }});
     });
   }
@@ -39,13 +43,13 @@ class App extends Component {
       this._refreshAliens();
 
       this.setState({
-        editAlienModal: false, editAlienData: {id: '', name: ''}
+        editAlienModal: false, editAlienData: {id: '', name: '', planet: ''}
       });
     });
   }
-  editAlien(id, name) {
+  editAlien(id, name, planet) {
     this.setState( {
-      editAlienData: { id, name}, editAlienModal: ! this.state.editAlienModal
+      editAlienData: { id, name, planet}, editAlienModal: ! this.state.editAlienModal
     });
   }
   _refreshAliens () {
@@ -73,36 +77,15 @@ class App extends Component {
     // this.state.newAlienModal  = true;
   }
   render() {
-    function convert(array){
-      var map = {};
-      for(var i = 0; i < array.length; i++){
-          var obj = array[i];
-         
-  
-          map[obj.id] = obj;
-  
-          var parent = obj.parent || '-';
-          if(!map[parent]){
-              map[parent] = {
-                  items: []
-              };
-          }
-          map[parent].items.push(obj);
-      }
-  
-      return map['-'].items;
-  
-  }
-  
-  console.log(convert(this.state.aliens))
-    let data = JSON.stringify(this.state.aliens);
     let aliens = this.state.aliens.map((alien) => {
       return (
         <tr key={alien.id}>
           <td>{alien.id}</td>
           <td>{alien.name}</td>
+          <td>{alien.type}</td>
+          <td>{alien.planet}</td>
           <td>
-            <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name)}>Edit Name</Button>
+            <Button color="success" size="sm" className="mr-2" onClick={this.editAlien.bind(this, alien.id, alien.name, alien.planet)}>Edit</Button>
             <Button color="danger" size="sm" onClick={this.deleteAlien.bind(this, alien.id)}>Delete</Button>
           </td>
         </tr>
@@ -135,7 +118,7 @@ class App extends Component {
               this.setState({newAlienData});
             }}/>
           </FormGroup>
-          {/* <FormGroup>
+          <FormGroup>
             <Label for="type">Type</Label>
             <Input id="type" value={this.state.newAlienData.type} onChange={(e) => {
               let {newAlienData} = this.state
@@ -150,7 +133,7 @@ class App extends Component {
               newAlienData.planet = e.target.value;
               this.setState({newAlienData});
             }}/>
-          </FormGroup> */}
+          </FormGroup>
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.addAlien.bind(this)}>Add Alien</Button>{' '}
@@ -175,8 +158,8 @@ class App extends Component {
               let {editAlienData} = this.state
               editAlienData.type = e.target.value;
               this.setState({editAlienData});
-            }}/>
-          </FormGroup>
+            }}/> 
+          </FormGroup>*/}
           <FormGroup>
             <Label for="planet">Birth Planet</Label>
             <Input id="planet" value={this.state.editAlienData.planet} onChange={(e) => {
@@ -184,7 +167,7 @@ class App extends Component {
               editAlienData.planet = e.target.value;
               this.setState({editAlienData});
             }}/>
-          </FormGroup> */}
+          </FormGroup>
 
         </ModalBody>
         <ModalFooter>
@@ -198,6 +181,8 @@ class App extends Component {
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th>Type</th>
+              <th>Birth Planet</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -206,7 +191,6 @@ class App extends Component {
             {aliens}
           </tbody>
         </Table>
-        <Tree data={data}/>
       </div>
     );
   }

@@ -12,7 +12,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -30,6 +29,12 @@ public class Alien {
     @Getter
     @Setter
 	private String name;
+    @Getter
+    @Setter
+	private String type;
+    @Getter
+    @Setter
+	private String planet;
 	@ManyToOne(fetch=FetchType.LAZY)
     @Getter
     @Setter
@@ -38,7 +43,6 @@ public class Alien {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter
 	private Set<Alien> children;
-	// Con esto haces que no aparezcan en los nested jsons de los hijos
 	@JsonIgnore
 	public Set<Alien> getChildren() {
 		return children;
