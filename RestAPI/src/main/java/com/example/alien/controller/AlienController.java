@@ -30,7 +30,7 @@ public class AlienController
 		a.setId(alien.getId());
 		a.setPlanet(alien.getPlanet());
 		a.setType(alien.getType());
-		if(alien.getClave() == null) {
+		if((alien.getClave() == null) || (alien.getType() != "Alpha" && alien.getClave() != null))  {
 			a.setParent(null);
 		} else {
 			a.setParent(alien.getParent(repo.getOne(alien.getClave())));
@@ -86,7 +86,8 @@ public class AlienController
     															   .name(p.getName())
     															   .planet(p.getPlanet())
     															   .type(p.getType())
-    															   .parent(p.getParent())
     															   .children(p.getChildren())
-    															   .build();
+    															   .build()
+    															   
+    															   ;
 }

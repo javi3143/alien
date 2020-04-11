@@ -43,14 +43,14 @@ public class Alien {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter
 	private Set<Alien> children;
-	@JsonIgnore
+//	@JsonIgnore
 	public Set<Alien> getChildren() {
 		return children;
 	}
 	
-//	@JsonIgnore
-//	public Alien getParent() {
-//		return parent;
-//	}
+	@JsonIgnore
+	public Alien getParent() {
+		return parent;
+	}
 	
 }

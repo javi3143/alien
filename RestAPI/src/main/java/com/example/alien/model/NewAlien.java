@@ -1,11 +1,17 @@
 package com.example.alien.model;
 
 public class NewAlien {
+
     private Long id;
+
     private String name;
+	
     private String type;
+	
     private String planet;
+	
     private Alien parent;
+	
     private Long clave;
     
     public Long getId() {

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Table, Button, ModalHeader, Modal, ModalFooter, ModalBody, Label, Input, FormGroup} from 'reactstrap';
+import Tree from "./Tree"
+
 
 class App extends Component {
   state = {
@@ -76,6 +78,9 @@ class App extends Component {
     })
     // this.state.newAlienModal  = true;
   }
+  handleSubmit = (event) => {
+    event.preventDefault()
+  }
   render() {
     let aliens = this.state.aliens.map((alien) => {
       return (
@@ -102,19 +107,11 @@ class App extends Component {
       <Modal isOpen={this.state.newAlienModal} toggle={this.toggleNewAlienModal.bind(this)}>
         <ModalHeader toggle={this.toggleNewAlienModal.bind(this)}>Add a new alien</ModalHeader>
         <ModalBody>
-          <FormGroup>
+          <FormGroup onSubmit={this.handleSubmit}>
             <Label for="name">Name</Label>
             <Input id="name" value={this.state.newAlienData.name} onChange={(e) => {
               let {newAlienData} = this.state
               newAlienData.name = e.target.value;
-              this.setState({newAlienData});
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="name">Parent ID</Label>
-            <Input id="name" value={this.state.newAlienData.clave} onChange={(e) => {
-              let {newAlienData} = this.state
-              newAlienData.clave = e.target.value;
               this.setState({newAlienData});
             }}/>
           </FormGroup>
@@ -131,6 +128,14 @@ class App extends Component {
             <Input id="planet" value={this.state.newAlienData.planet} onChange={(e) => {
               let {newAlienData} = this.state
               newAlienData.planet = e.target.value;
+              this.setState({newAlienData});
+            }}/>
+          </FormGroup>
+          <FormGroup>
+            <Label for="parent">Parent ID</Label>
+            <Input id="parent" value={this.state.newAlienData.clave} onChange={(e) => {
+              let {newAlienData} = this.state
+              newAlienData.clave = e.target.value;
               this.setState({newAlienData});
             }}/>
           </FormGroup>
@@ -191,7 +196,9 @@ class App extends Component {
             {aliens}
           </tbody>
         </Table>
+        <div><Tree/></div>
       </div>
+      
     );
   }
   
