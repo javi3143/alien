@@ -3,7 +3,6 @@ import axios from 'axios';
 import {Table, Button, ModalHeader, Modal, ModalFooter, ModalBody, Label, Input, FormGroup} from 'reactstrap';
 import Tree from "./Tree"
 
-
 class App extends Component {
   state = {
     aliens: [],
@@ -113,7 +112,7 @@ class App extends Component {
               let {newAlienData} = this.state
               newAlienData.name = e.target.value;
               this.setState({newAlienData});
-            }}/>
+            }} required/>
           </FormGroup>
           <FormGroup>
             <Label for="type">Type</Label>
